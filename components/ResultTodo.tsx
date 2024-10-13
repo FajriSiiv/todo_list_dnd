@@ -14,6 +14,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoProps } from "@/interface";
 import { uniqueStoreLocalStorage } from "@/app/Homepage";
 import { Button } from "./ui/button";
+import { format } from "date-fns";
+import { ModalCardTodo } from "./Modal/ModalCard";
 
 const ItemType = "ITEM";
 
@@ -70,9 +72,9 @@ export default function ResultTodo({
           </CardHeader>
           <CardContent>
             <CardDescription>{item.todo_status}</CardDescription>
-            {item.todoTasks?.map((taks, index) => (
-              <li key={index}>{taks}</li>
-            ))}
+            <CardDescription>
+              {format(item.todoDate, "LLLL do,yyyy")}
+            </CardDescription>
           </CardContent>
           <CardFooter>
             <Button onClick={() => handleDeleteTodo(item.todoId)}>
@@ -116,9 +118,9 @@ export default function ResultTodo({
           <h2 className="text-lg font-bold">{title}</h2>
           <div className="grid gap-2 pt-4">
             {resultTodo
-              .filter((item: TodoProps) => item.todo_status === todo_status)
-              .map((todo: TodoProps) => (
-                <DraggableItem item={todo} key={todo.todoId} />
+              .filter((item: any) => item.todo_status === todo_status)
+              .map((todo: any) => (
+                <DraggableItem item={todo} />
               ))}
           </div>
         </div>

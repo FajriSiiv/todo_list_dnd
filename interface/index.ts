@@ -2,12 +2,6 @@ export interface TodoProps {
   todo: string;
   todo_status: "Tertunda" | "Diproses" | "Tuntas";
   todoId: number;
-  todoTasks: string[];
+  todoTasks?: string[];
+  todoDate: Date | string;
 }
-
-// export interface FormTodoProps {
-//   todo: string;
-//   todo_status: string;
-//   todoTasks: string[];
-
-// }
