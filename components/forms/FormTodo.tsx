@@ -27,6 +27,7 @@ import { Label } from "../ui/label";
 import { Trash2 } from "lucide-react";
 import CalendarSelect from "../calendarSelect/CalendarSelect";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   todo: z
@@ -39,16 +40,23 @@ const formSchema = z.object({
   todoTasks: z
     .array(z.string().min(1, { message: "Task harus diisi" }))
     .min(1, "Setidaknya satu task harus diisi"),
-  todoDate: z.date({
-    required_error: "Tanggal harus diisi",
-    invalid_type_error: "Format tanggal tidak valid",
-  }),
+  // todoDate: z.date({
+  //   required_error: "Tanggal harus diisi",
+  //   invalid_type_error: "Format tanggal tidak valid",
+  // }),
 });
+
+function generateUUID() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 
 export default function FormTodo({
   setResultTodo,
   resultTodo,
-  todoLength,
   setTodoTasks,
   todoTasks,
 }: any) {
@@ -80,14 +88,18 @@ export default function FormTodo({
   };
 
   const onSubmit = (data: TodoProps) => {
+    if (todoTasks.length < 1) {
+      toast("Kamu belum isi task.");
+      return 1;
+    }
+
     const newTodo = {
       ...data,
       todoTasks: todoTasks.filter((task: string) => task.trim() !== ""),
-      todoId: todoLength + 1,
-      todoDate: format(data.todoDate, "dd-MMM-yyyy"),
+      todoId: generateUUID(),
+      // todoDate: data.todoDate,
+      todoDate: new Date(),
     };
-
-    console.log(newTodo);
 
     setResultTodo((prevTodos: TodoProps[]) => {
       const updateTodos = [...prevTodos, newTodo];
@@ -107,7 +119,10 @@ export default function FormTodo({
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="max-w-[500px] p-4 border-2 border-dashed  rounded-md mx-auto"
+      >
         <FormField
           control={form.control}
           name="todo"
@@ -146,9 +161,9 @@ export default function FormTodo({
             Tambah Task
           </Button>
         </div>
-        <div className="py-5">
+        {/* <div className="py-5">
           <CalendarSelect control={form.control} />
-        </div>
+        </div> */}
 
         <FormField
           control={form.control}

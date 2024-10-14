@@ -1,7 +1,7 @@
 export interface TodoProps {
   todo: string;
   todo_status: "Tertunda" | "Diproses" | "Tuntas";
-  todoId: number;
+  todoId: number | string;
   todoTasks?: string[];
   todoDate: Date | string;
 }

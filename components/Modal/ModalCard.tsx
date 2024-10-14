@@ -10,44 +10,41 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TodoProps } from "@/interface";
+import { Trash2 } from "lucide-react";
 
-export function ModalCardTodo({ children }: { children: React.ReactNode }) {
+export function ModalCardTodo({
+  children,
+  todo,
+  handleDelete,
+}: {
+  children: React.ReactNode;
+  todo: TodoProps;
+  handleDelete: () => void;
+}) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <button>Trigger</button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle>{todo.todo}</DialogTitle>
+          {todo.todoTasks?.map((task) => (
+            <li>{task}</li>
+          ))}
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              id="username"
-              defaultValue="@peduarte"
-              className="col-span-3"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
+
+        <DialogFooter className="flex !justify-between w-full">
+          <Button
+            type="submit"
+            onClick={handleDelete}
+            variant="destructive"
+            size="icon"
+          >
+            <Trash2 />
+          </Button>
+          <Button type="submit" className="bg-green-600">
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,8 +14,10 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoProps } from "@/interface";
 import { uniqueStoreLocalStorage } from "@/app/Homepage";
 import { Button } from "./ui/button";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { ModalCardTodo } from "./Modal/ModalCard";
+import { id } from "date-fns/locale";
+import { Badge } from "./ui/badge";
 
 const ItemType = "ITEM";
 
@@ -26,6 +28,12 @@ export default function ResultTodo({
   resultTodo: any;
   setResultTodo: any;
 }) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const handleDeleteTodo = (todoId: any) => {
     setResultTodo((prevTodos: TodoProps[]) => {
       const updateTodos = prevTodos.filter((todo) => todo.todoId !== todoId);
@@ -57,31 +65,47 @@ export default function ResultTodo({
     }));
 
     return (
-      <div
-        ref={drag}
-        style={{
-          padding: "8px",
-          margin: "4px",
-          backgroundColor: isDragging ? "lightgreen" : "lightgray",
-          cursor: "move",
-        }}
-      >
-        <Card className="">
-          <CardHeader>
-            <CardTitle>{item.todo}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>{item.todo_status}</CardDescription>
-            <CardDescription>
-              {format(item.todoDate, "LLLL do,yyyy")}
-            </CardDescription>
-          </CardContent>
-          <CardFooter>
-            <Button onClick={() => handleDeleteTodo(item.todoId)}>
-              Delete
-            </Button>
-          </CardFooter>
-        </Card>
+      <div ref={drag}>
+        <ModalCardTodo
+          todo={item}
+          handleDelete={() => handleDeleteTodo(item.todoId)}
+        >
+          <Card
+            className={`p-4 grid gap-2 rounded-sm ${
+              isDragging ? "bg-emerald-500/20" : ""
+            }`}
+          >
+            <CardHeader className="p-0 flex flex-row justify-between items-center">
+              <CardTitle>{item.todo}</CardTitle>
+
+              <Badge
+                variant={
+                  item.todo_status === "Tertunda"
+                    ? "destructive"
+                    : item.todo_status === "Diproses"
+                    ? "secondary"
+                    : "default"
+                }
+              >
+                {item.todo_status}
+              </Badge>
+            </CardHeader>
+            <CardContent className="p-0">
+              <CardDescription>
+                {formatDistanceToNow(item.todoDate, {
+                  includeSeconds: true,
+                  addSuffix: true,
+                  locale: id,
+                })}
+              </CardDescription>
+            </CardContent>
+            {/* <CardFooter>
+              <Button onClick={() => handleDeleteTodo(item.todoId)}>
+                Delete
+              </Button>
+            </CardFooter> */}
+          </Card>
+        </ModalCardTodo>
       </div>
     );
   };
@@ -117,11 +141,10 @@ export default function ResultTodo({
         <div>
           <h2 className="text-lg font-bold">{title}</h2>
           <div className="grid gap-2 pt-4">
-            {resultTodo
-              .filter((item: any) => item.todo_status === todo_status)
-              .map((todo: any) => (
-                <DraggableItem item={todo} />
-              ))}
+            {isMounted &&
+              resultTodo
+                .filter((item: any) => item.todo_status === todo_status)
+                .map((todo: any) => <DraggableItem item={todo} />)}
           </div>
         </div>
       </DropZone>
@@ -129,7 +152,7 @@ export default function ResultTodo({
   };
 
   useEffect(() => {
-    localStorage.setItem("MyTodoApp_todos", JSON.stringify(resultTodo));
+    localStorage.setItem(uniqueStoreLocalStorage, JSON.stringify(resultTodo));
   }, [resultTodo]);
 
   return (
