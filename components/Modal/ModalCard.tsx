@@ -2,14 +2,11 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { TodoProps } from "@/interface";
 import { Trash2 } from "lucide-react";
 
@@ -28,8 +25,8 @@ export function ModalCardTodo({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{todo.todo}</DialogTitle>
-          {todo.todoTasks?.map((task) => (
-            <li>{task}</li>
+          {todo.todoTasks?.map((task, index) => (
+            <li key={index}>{task}</li>
           ))}
         </DialogHeader>
 

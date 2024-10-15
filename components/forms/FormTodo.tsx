@@ -25,8 +25,6 @@ import { uniqueStoreLocalStorage } from "@/app/Homepage";
 import { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Trash2 } from "lucide-react";
-import CalendarSelect from "../calendarSelect/CalendarSelect";
-import { format } from "date-fns";
 import { toast } from "sonner";
 
 const formSchema = z.object({
@@ -40,10 +38,6 @@ const formSchema = z.object({
   todoTasks: z
     .array(z.string().min(1, { message: "Task harus diisi" }))
     .min(1, "Setidaknya satu task harus diisi"),
-  // todoDate: z.date({
-  //   required_error: "Tanggal harus diisi",
-  //   invalid_type_error: "Format tanggal tidak valid",
-  // }),
 });
 
 function generateUUID() {
@@ -59,7 +53,12 @@ export default function FormTodo({
   resultTodo,
   setTodoTasks,
   todoTasks,
-}: any) {
+}: {
+  setResultTodo: any;
+  resultTodo: TodoProps[];
+  setTodoTasks: any;
+  todoTasks: string[];
+}) {
   const [newTask, setNewTask] = useState("");
 
   const form = useForm<TodoProps>({
@@ -111,6 +110,10 @@ export default function FormTodo({
 
       return updateTodos;
     });
+
+    toast.success(`Judul : ${data.todo}`, {
+      description: "Kamu berhasil membuat Todo",
+    });
   };
 
   useEffect(() => {
@@ -139,7 +142,7 @@ export default function FormTodo({
 
         <div className="grid gap-y-2 py-2 mt-4">
           <Label>Todo</Label>
-          {todoTasks.map((task: any, index: number) => (
+          {todoTasks.map((task: string, index: number) => (
             <div className="flex gap-x-2" key={index}>
               <Input
                 {...form.register(`todoTasks.${index}`)}

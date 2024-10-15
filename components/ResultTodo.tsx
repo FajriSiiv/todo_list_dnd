@@ -1,25 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import React, { useEffect, useRef, useState } from "react";
+
+import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TodoProps } from "@/interface";
 import { uniqueStoreLocalStorage } from "@/app/Homepage";
-import { Button } from "./ui/button";
-import { format, formatDistanceToNow } from "date-fns";
-import { ModalCardTodo } from "./Modal/ModalCard";
-import { id } from "date-fns/locale";
-import { Badge } from "./ui/badge";
 
-const ItemType = "ITEM";
+import { DraggableItem } from "./Card/DraggableCard";
+import { DropZone } from "./DropZone/DropzoneCard";
+
+export const ItemType = "ITEM";
 
 export default function ResultTodo({
   resultTodo,
@@ -55,76 +46,6 @@ export default function ResultTodo({
     );
   };
 
-  const DraggableItem = ({ item }: { item: TodoProps }) => {
-    const [{ isDragging }, drag] = useDrag(() => ({
-      type: ItemType,
-      item: { todoId: item.todoId },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-    }));
-
-    return (
-      <div ref={drag}>
-        <ModalCardTodo
-          todo={item}
-          handleDelete={() => handleDeleteTodo(item.todoId)}
-        >
-          <Card
-            className={`p-4 grid gap-2 rounded-sm ${
-              isDragging ? "bg-emerald-500/20" : ""
-            }`}
-          >
-            <CardHeader className="p-0 flex flex-row justify-between items-center">
-              <CardTitle>{item.todo}</CardTitle>
-
-              <Badge
-                variant={
-                  item.todo_status === "Tertunda"
-                    ? "destructive"
-                    : item.todo_status === "Diproses"
-                    ? "secondary"
-                    : "default"
-                }
-              >
-                {item.todo_status}
-              </Badge>
-            </CardHeader>
-            <CardContent className="p-0">
-              <CardDescription>
-                {formatDistanceToNow(item.todoDate, {
-                  includeSeconds: true,
-                  addSuffix: true,
-                  locale: id,
-                })}
-              </CardDescription>
-            </CardContent>
-            {/* <CardFooter>
-              <Button onClick={() => handleDeleteTodo(item.todoId)}>
-                Delete
-              </Button>
-            </CardFooter> */}
-          </Card>
-        </ModalCardTodo>
-      </div>
-    );
-  };
-
-  const DropZone = ({ children, onDropTodo, todo_status }: any) => {
-    const [, drop] = useDrop(() => ({
-      accept: ItemType,
-      drop: (item: TodoProps) => {
-        onDropTodo(item.todoId, todo_status);
-      },
-    }));
-
-    return (
-      <div ref={drop} style={{ padding: "20px", border: "1px dashed gray" }}>
-        {children}
-      </div>
-    );
-  };
-
   const ResultGrid = ({
     title,
     todo_status,
@@ -144,7 +65,13 @@ export default function ResultTodo({
             {isMounted &&
               resultTodo
                 .filter((item: any) => item.todo_status === todo_status)
-                .map((todo: any) => <DraggableItem item={todo} />)}
+                .map((todo: any, index) => (
+                  <DraggableItem
+                    item={todo}
+                    handleDeleteTodo={handleDeleteTodo}
+                    key={index}
+                  />
+                ))}
           </div>
         </div>
       </DropZone>
