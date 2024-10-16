@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { DialogFooter } from "../ui/dialog";
 
 const formSchema = z.object({
   todo: z
@@ -124,7 +125,7 @@ export default function FormTodo({
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-[500px] p-4 border-2 border-dashed  rounded-md mx-auto"
+        className="max-w-[800px] w-full p-4 border-2 border-dashed  rounded-md mx-auto"
       >
         <FormField
           control={form.control}
@@ -197,9 +198,11 @@ export default function FormTodo({
             </FormItem>
           )}
         />
-        <Button type="submit" className="btn-submit mt-10">
-          Submit
-        </Button>
+        <DialogFooter>
+          <Button type="submit" className="btn-submit mt-10">
+            Submit
+          </Button>
+        </DialogFooter>
       </form>
     </FormProvider>
   );

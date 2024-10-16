@@ -22,7 +22,11 @@ export const DropZone = ({
 
   drop(ref);
   return (
-    <div ref={ref} style={{ padding: "20px", border: "1px dashed gray" }}>
+    <div
+      ref={ref}
+      className="min-h-[500px]"
+      style={{ padding: "20px", border: "1px dashed gray" }}
+    >
       {children}
     </div>
   );
