@@ -39,9 +39,6 @@ export function ModalCardTodo({
           >
             <Trash2 />
           </Button>
-          <Button type="submit" className="bg-green-600">
-            Save changes
-          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

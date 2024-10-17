@@ -1,0 +1,16 @@
+{
+  "name": "Todo-List",
+  "short_name": "Todo-List",
+  "description": "Website yang mempermudah pekerjaan anda dalam melakukan pengingatan catatan",
+  "icons": [
+    {
+      "src": "/todo-png-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "start_url": "/",
+  "display": "standalone"
+}

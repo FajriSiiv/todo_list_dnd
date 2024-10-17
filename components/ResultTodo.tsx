@@ -83,7 +83,7 @@ export default function ResultTodo({
   }, [resultTodo]);
 
   return (
-    <div className="grid grid-cols-3 mt-10 gap-10">
+    <div className="grid md:grid-cols-3 mt-10 gap-10 grid-rows-3 grid-cols-1">
       <DndProvider backend={HTML5Backend}>
         <ResultGrid
           title="Tertunda"

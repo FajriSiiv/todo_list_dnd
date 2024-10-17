@@ -38,7 +38,7 @@ export const DraggableItem = ({
         handleDelete={() => handleDeleteTodo(item.todoId)}
       >
         <Card
-          className={`p-4 grid gap-2 rounded-sm ${
+          className={`p-4 grid gap-2 rounded-sm cursor-pointer ${
             isDragging ? "bg-emerald-500/20" : ""
           }`}
         >
